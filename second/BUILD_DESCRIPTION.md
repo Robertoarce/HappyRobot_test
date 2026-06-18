@@ -88,9 +88,14 @@ wants $X, round N" and receives only "accept / counter at $Y / reject." The
 language model never has the ceiling in its context, so it cannot leak it under
 any prompt or social-engineering pressure.
 
-**OTP isolated from the agent.** The 6-digit code is generated server-side
-(5-minute expiry, 3 attempts) and is never placed in the agent's conversational
-context — so the agent has no code to be talked into revealing.
+**OTP isolated from the agent, bound to the registered number.** The 6-digit
+code is generated server-side (5-minute expiry, 3 attempts) and is never placed
+in the agent's conversational context — so the agent has no code to be talked
+into revealing. The code is also bound to the carrier's **FMCSA-registered
+telephone** (surfaced by `verify_carrier`, threaded into `/otp/request`) rather
+than a number the caller states on the line — so a caller cannot have the code
+redirected to their own phone. Only a masked form ("ending in 1234") is ever
+exposed to the agent; the full number and code go solely to the SMS node.
 
 **Negotiation policy.** Server-side, capped at 3 counter rounds; the agent must
 obtain a specific dollar figure from the carrier before evaluating, never
