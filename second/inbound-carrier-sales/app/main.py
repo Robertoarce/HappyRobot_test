@@ -111,6 +111,9 @@ async def verify_carrier(
 
 class OtpRequest(BaseModel):
     session_id: str
+    # The FMCSA-registered number from verify_carrier. Bound here so the code is
+    # sent to the number on file, never one the caller supplies on the call.
+    registered_phone: str | None = None
 
 
 class OtpVerifyRequest(BaseModel):
@@ -118,10 +121,25 @@ class OtpVerifyRequest(BaseModel):
     code: str
 
 
+def _mask_phone(phone: str | None) -> str | None:
+    if not phone:
+        return None
+    digits = "".join(c for c in phone if c.isdigit())
+    if len(digits) < 4:
+        return "•••"
+    return f"•••-•••-{digits[-4:]}"
+
+
 @app.post("/otp/request", dependencies=[Depends(require_api_key)])
 async def otp_request(body: OtpRequest, store: OtpStore = Depends(get_otp_store)):
-    # The code goes only to the workflow's SMS node, never to the agent node.
-    return {"code": store.issue(body.session_id)}
+    code = store.issue(body.session_id, phone=body.registered_phone)
+    # `code` and the full `phone` are for the SMS node only — never the agent.
+    # `masked_phone` is safe to read back to the carrier ("ending in 1234").
+    return {
+        "code": code,
+        "phone": body.registered_phone,
+        "masked_phone": _mask_phone(body.registered_phone),
+    }
 
 
 @app.post("/otp/verify", dependencies=[Depends(require_api_key)])

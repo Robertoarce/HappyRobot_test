@@ -18,6 +18,7 @@ class _OtpEntry:
     code: str
     expires_at: float
     attempts_left: int
+    phone: str | None = None
 
 
 class OtpStore:
@@ -26,12 +27,15 @@ class OtpStore:
         self.max_attempts = max_attempts
         self._entries: dict[str, _OtpEntry] = {}
 
-    def issue(self, session_id: str) -> str:
+    def issue(self, session_id: str, phone: str | None = None) -> str:
+        # ``phone`` is the FMCSA-registered number this code is bound to; it is
+        # recorded for the SMS node, never exposed to the agent.
         code = f"{secrets.randbelow(1_000_000):06d}"
         self._entries[session_id] = _OtpEntry(
             code=code,
             expires_at=time.monotonic() + self.ttl,
             attempts_left=self.max_attempts,
+            phone=phone,
         )
         return code
 

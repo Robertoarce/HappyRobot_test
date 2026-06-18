@@ -27,33 +27,43 @@ class FmcsaClient:
         if resp.status_code == 404:
             return {"eligible": False, "reason": "MC number not found"}
         resp.raise_for_status()
-        payload = resp.json()
+        return parse_carrier(resp.json())
 
-        content = payload.get("content") or []
-        if not content:
-            return {"eligible": False, "reason": "MC number not found"}
 
-        # The API returns a list of matches; take the first carrier entry.
-        entry = content[0] if isinstance(content, list) else content
-        carrier = entry.get("carrier") or {}
+def parse_carrier(payload: dict[str, Any]) -> dict[str, Any]:
+    """Map an FMCSA QCMobile response to our eligibility verdict.
 
-        allowed = str(carrier.get("allowedToOperate", "")).upper() == "Y"
-        status_code = str(carrier.get("statusCode", "")).upper()
-        out_of_service = carrier.get("oosDate") not in (None, "", "null")
+    Also surfaces the carrier's registered ``telephone`` so the OTP can be sent
+    to the number on file with FMCSA — never a caller-supplied one. Pure (no
+    network) so the parsing is unit-testable.
+    """
+    content = payload.get("content") or []
+    if not content:
+        return {"eligible": False, "reason": "MC number not found"}
 
-        eligible = allowed and status_code == "A" and not out_of_service
-        reason = None
-        if not eligible:
-            if out_of_service:
-                reason = "Carrier is out of service"
-            elif not allowed:
-                reason = "Carrier not allowed to operate"
-            else:
-                reason = f"Authority status is not active (status={status_code or 'unknown'})"
+    # The API returns a list of matches; take the first carrier entry.
+    entry = content[0] if isinstance(content, list) else content
+    carrier = entry.get("carrier") or {}
 
-        return {
-            "eligible": eligible,
-            "reason": reason,
-            "carrier_name": carrier.get("legalName") or carrier.get("dbaName"),
-            "dot_number": carrier.get("dotNumber"),
-        }
+    allowed = str(carrier.get("allowedToOperate", "")).upper() == "Y"
+    status_code = str(carrier.get("statusCode", "")).upper()
+    out_of_service = carrier.get("oosDate") not in (None, "", "null")
+
+    eligible = allowed and status_code == "A" and not out_of_service
+    reason = None
+    if not eligible:
+        if out_of_service:
+            reason = "Carrier is out of service"
+        elif not allowed:
+            reason = "Carrier not allowed to operate"
+        else:
+            reason = f"Authority status is not active (status={status_code or 'unknown'})"
+
+    phone = carrier.get("telephone") or carrier.get("phyPhone")
+    return {
+        "eligible": eligible,
+        "reason": reason,
+        "carrier_name": carrier.get("legalName") or carrier.get("dbaName"),
+        "dot_number": carrier.get("dotNumber"),
+        "registered_phone": str(phone).strip() if phone else None,
+    }
