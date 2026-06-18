@@ -1,6 +1,6 @@
 # Summary Email — Inbound Carrier Sales Automation (POC)
 
-**To:** [Carrier Sales lead], HappyRobot Logistics
+**To:** [Name], Carrier Sales lead, HappyRobot Logistics
 **From:** Roberto Arce
 **Subject:** Inbound Carrier Sales — working proof of concept + next steps
 
@@ -8,52 +8,52 @@
 
 Hi [Name],
 
-Following our deployment-strategy session, I've built and deployed a working
-proof of concept that automates the first leg of your inbound carrier desk — the
-part that's currently eating your dispatchers' time during peak hours.
+Following our session, I've built and deployed a working proof of concept that
+automates the first leg of your inbound carrier desk — the part that's currently
+eating your dispatchers' time during peak hours.
 
-**What it does.** A carrier calls in (web-based voice, no phone number to
-provision) and the AI agent handles the whole opening conversation on its own:
+**How it works.** A carrier calls in (over the web — no phone line to set up) and
+the AI agent runs the whole opening conversation on its own:
 
-1. Collects the **MC number**, reads it back to confirm, and **verifies operating
-   authority against the live FMCSA registry**.
-2. Sends a **one-time passcode** and confirms it before going any further — and it
-   refuses to skip this under any pressure.
-3. Searches your **TMS** for matching loads on the carrier's lane and equipment.
-4. **Pitches a load and negotiates the rate** — capped at three rounds, and it
-   never reveals or exceeds your internal maximum.
+1. Takes the **MC number**, reads it back to confirm, and checks **authority
+   against the live FMCSA registry**.
+2. Sends a **one-time passcode** and confirms it before doing anything else — and
+   won't skip it no matter how the caller pushes.
+3. Searches your **TMS** for loads on the carrier's lane and equipment.
+4. Pitches a load and **negotiates the rate** — up to three rounds, and it never
+   reveals or goes above your internal maximum.
 5. **Books the load** and hands off to a senior rep to finalize.
-6. **Logs every call** (carrier, load, agreed rate, outcome, sentiment) to a
-   database that feeds a live operations dashboard — a purpose-built carrier-desk
-   view (booking conversion, negotiation savings, verification failures, recent
-   calls) your team can open in the browser.
+6. **Logs every call** — carrier, load, agreed rate, outcome, sentiment — into a
+   live operations dashboard your team opens in the browser (booking conversion,
+   negotiation savings, verification failures, recent calls).
 
-**What's working today.** The full flow has been validated with live calls end to
-end — real FMCSA lookups (e.g., a verified national carrier), real loads from the
-TMS, real bookings with confirmation references, all logged and charted. The
-integration is containerized and deployed to the cloud, and the legacy-TMS
-connection is hardened against the timeouts and malformed responses that system
-is known for.
+**What's working today.** I've run complete calls end to end — real FMCSA lookups,
+real loads from your TMS, real bookings with confirmation numbers, all logged and
+charted. It runs in the cloud and stays reliable even when the legacy TMS is slow
+or drops responses, which I'm told it does often.
 
-**Why it matters to your numbers.** Three of your stated pain points are directly
-addressed:
-- **Margin leakage** → rate negotiation is consistent and policy-bound; the
-  ceiling is enforced server-side and can't be talked out of the agent. The
-  dashboard tracks average negotiation savings per booked load.
-- **Missed calls / peak load** → the agent answers instantly, 24/7, in parallel.
-- **No audit trail** → every call is now a structured, queryable record.
+**What are the benefits?**
 
-**Quality & safety.** We ran an adversarial test suite (graded automatically
-against defined quality criteria) plus manual red-team calls — attempts to skip
-verification, extract the rate ceiling, brute-force the passcode, and force a
-transfer after a failed negotiation. The agent held the line on every
-security-critical case; two minor process gaps it surfaced have been fixed and
-re-verified.
+- **Margin leakage on negotiated rates.** Today, what a carrier gets talked into
+  varies by whoever picks up the phone. The agent negotiates the same disciplined
+  way on every call — and it never even *sees* your maximum rate, so it physically
+  can't be talked into leaking it or going above it. The dashboard shows your
+  average savings per booked load.
+- **Missed calls when volume spikes.** Calls that go to voicemail at peak are
+  loads you don't cover. The agent answers instantly, around the clock, and
+  handles many calls at the same time — so nothing sits in a queue.
+- **No audit trail.** Right now there's no clean record of who called, what was
+  offered, or why a load did or didn't book. Every call is now a structured,
+  searchable record feeding a dashboard your team opens in the browser.
 
-**One production step.** Sending the verification code by SMS needs a phone
-sender provisioned on your workspace (an admin action). The passcode logic is
-fully built; for the POC the code is confirmed via the call record. Everything
-else is live.
+**Quality & safety.** I stress-tested it the way a bad actor would — trying to
+skip verification, fish out your rate ceiling, brute-force the passcode, and force
+a transfer after a failed negotiation. It held the line on every one. Two smaller
+process gaps it surfaced are fixed and re-checked.
+
+**One step to go fully live.** Texting the passcode needs a phone sender enabled
+on your workspace (a quick admin step). The passcode logic is already built; for
+this demo the code is confirmed through the call record. Everything else is live.
 
 **Links**
 - Demo video (~5 min): [link]
@@ -62,7 +62,7 @@ else is live.
 - Operations dashboard (HappyRobot App): https://platform.happyrobot.ai/fderobertoarce/apps/carrier-call-app-35v50
 
 **Suggested next steps**
-1. Provision the SMS sender (the one remaining infra item).
+1. Enable the SMS sender (the one remaining setup item).
 2. Pilot the agent on a slice of inbound traffic and review the dashboard weekly.
 3. Tune load-matching and negotiation thresholds from real pilot data.
 
