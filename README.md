@@ -57,16 +57,48 @@ second/
   SUMMARY_EMAIL.md         Prospect summary email
 ```
 
-## Run the middleware locally
+## Run & deploy the middleware
+
+Three ways to run it. All read config from environment variables
+(`TMS_*`, `FMCSA_WEB_KEY`, `API_KEY`) — see
+[`.env.example`](second/inbound-carrier-sales/.env.example).
+
+### Option 1 — Local, direct (development)
 
 ```bash
 cd second/inbound-carrier-sales
 cp .env.example .env          # fill TMS_*, FMCSA_WEB_KEY, API_KEY
 pip install -r requirements.txt
-python -m pytest              # 17 tests, incl. all documented TMS fault modes
+python -m pytest              # 29 tests, incl. all documented TMS fault modes
 uvicorn app.main:app --reload
-# or: docker build -t carrier-sales . && docker run --env-file .env -p 8000:8000 carrier-sales
 ```
+
+Runs at `http://localhost:8000`.
+
+### Option 2 — Local, Docker (the same image the cloud runs)
+
+```bash
+cd second/inbound-carrier-sales
+docker build -t carrier-sales .
+docker run --env-file .env -p 8000:8000 carrier-sales
+```
+
+Builds the container and runs it at `http://localhost:8000`.
+
+### Option 3 — Cloud, single command (Railway)
+
+The service is containerized and deploys to any cloud that builds a `Dockerfile`.
+[`railway.toml`](second/inbound-carrier-sales/railway.toml) pins the Dockerfile
+builder + the `/healthz` healthcheck:
+
+```bash
+cd second/inbound-carrier-sales
+railway up                    # single command: builds image, ships, health-checks
+```
+
+Railway also **auto-deploys on every push to `main`**, so a normal `git push`
+ships a new build. Set the env vars in the Railway service settings. Live
+instance: https://happyrobottest-production.up.railway.app
 
 ## Design highlights
 
