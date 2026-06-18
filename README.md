@@ -14,7 +14,7 @@ service.
 | Deliverable | Link |
 | --- | --- |
 | Summary email (prospect) | [`second/SUMMARY_EMAIL.md`](second/SUMMARY_EMAIL.md) |
-| Build description (IT + business) | [`second/BUILD_DESCRIPTION.md`](second/BUILD_DESCRIPTION.md) |
+| Build description (IT + business) | [`second/Technical_Summary.md`](second/Technical_Summary.md) |
 | Code repository | _this repo_ |
 | HappyRobot workflow | _[workflow link]_ |
 | Walkthrough video (~5 min) | _[video link]_ |
@@ -53,7 +53,7 @@ second/
     scripts/               TMS/FMCSA exploration probes
     Dockerfile, railway.toml
   platform/                TypeScript SDK scaffold (Northstars, adversarial, workflows)
-  BUILD_DESCRIPTION.md     Full build doc (architecture, security, QA, KPIs)
+  Technical_Summary.md     Full build doc (architecture, security, QA, KPIs)
   SUMMARY_EMAIL.md         Prospect summary email
 ```
 
@@ -118,7 +118,7 @@ instance: https://happyrobottest-production.up.railway.app
   red-team calls. Two real weaknesses surfaced and were fixed and re-verified
   (accepting a second MC after a fail; getting stuck without advancing the flow);
   the security-critical behaviors held throughout. See
-  [`second/BUILD_DESCRIPTION.md`](second/BUILD_DESCRIPTION.md) §8.
+  [`second/Technical_Summary.md`](second/Technical_Summary.md) §8.
 
 ## Production notes
 
