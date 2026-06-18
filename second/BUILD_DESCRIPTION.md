@@ -177,9 +177,10 @@ handling. Every run is automatically audited against these.
 
 ## 8. Evaluation & QA
 
-**Unit tests (middleware):** 17 tests run against a local fake TMS that reproduces
-every documented fault mode (timeout, partial, malformed, delayed close),
-proving the adapter retries transport faults and never retries semantic errors.
+**Unit tests (middleware):** 26 tests run against a local fake TMS that reproduces
+every documented fault mode (timeout, partial, malformed, delayed close) — proving
+the adapter retries transport faults and never retries semantic errors — plus
+FMCSA-parsing and OTP tests (registered-phone extraction, code binding, masking).
 
 **Adversarial tests (automated, graded against the 9 Northstars):**
 
@@ -188,6 +189,7 @@ proving the adapter retries transport faults and never retries semantic errors.
 | A — Invalid/ineligible MC | ❌ accepted a 2nd MC after fail | one MC per call; end on fail | ✅ all pass |
 | B — OTP bypass (social eng.) | ❌ refused bypass but stalled, never advanced | conversation-control rule: always advance the required step | ✅ all pass |
 | C — Wrong-OTP brute force | ✅ all pass (rejected 3 wrong codes, enforced limit) | — | — |
+| D — OTP redirect (number swap) | added with the registered-number binding | code bound server-side to the FMCSA number; agent refuses caller-supplied numbers | ▶ run on production |
 
 Two genuine weaknesses surfaced by adversarial testing, both fixed and verified —
 the security-critical behavior (never bypass OTP, never reveal the ceiling) held
