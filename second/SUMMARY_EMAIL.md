@@ -49,9 +49,13 @@ a transfer after a failed negotiation. It held the line on every one. Two smalle
 process gaps it surfaced are fixed and re-checked.
 
 **Links**
-- Here is the Operations dashboard take a look! (HappyRobot App): https://platform.happyrobot.ai/fderobertoarce/apps/carrier-call-app-35v50
+
+Here is the Operations dashboard:
+
+(HappyRobot App): https://platform.happyrobot.ai/fderobertoarce/apps/carrier-call-app-35v50
+
 
 Happy to walk through it live whenever works for you.
 
-Best,
+Best Regards,
 Roberto Arce
