@@ -12,7 +12,23 @@ Following our session, I've built and deployed a working proof of concept that
 automates the first leg of your inbound carrier desk — the part that's currently
 eating your dispatchers' time during peak hours.
 
-**How it works.** A carrier calls in (over the web — no phone line to set up) and
+**What are the benefits?**
+
+- **Margin leakage on negotiated rates.** Today, what a carrier gets talked into
+  varies by whoever picks up the phone. The agent negotiates the same disciplined
+  way on every call — and it never even *sees* your maximum rate, so it physically
+  can't be talked into leaking it or going above it. The dashboard shows your
+  average savings per booked load.
+- **Missed calls when volume spikes.** Calls that go to voicemail at peak are
+  loads you don't cover. The agent answers instantly, around the clock, and
+  handles many calls at the same time — so nothing sits in a queue.
+- **No audit trail.** Right now there's no clean record of who called, what was
+  offered, or why a load did or didn't book. Every call is now a structured,
+  searchable record feeding a dashboard your team opens in the browser.
+  
+**How it works.** 
+
+A carrier calls in (over the web — no phone line to set up) and
 the AI agent runs the whole opening conversation on its own:
 
 1. Takes the **MC number**, reads it back to confirm, and checks **authority
@@ -27,44 +43,13 @@ the AI agent runs the whole opening conversation on its own:
    live operations dashboard your team opens in the browser (booking conversion,
    negotiation savings, verification failures, recent calls).
 
-**What's working today.** I've run complete calls end to end — real FMCSA lookups,
-real loads from your TMS, real bookings with confirmation numbers, all logged and
-charted. It runs in the cloud and stays reliable even when the legacy TMS is slow
-or drops responses, which I'm told it does often.
-
-**What are the benefits?**
-
-- **Margin leakage on negotiated rates.** Today, what a carrier gets talked into
-  varies by whoever picks up the phone. The agent negotiates the same disciplined
-  way on every call — and it never even *sees* your maximum rate, so it physically
-  can't be talked into leaking it or going above it. The dashboard shows your
-  average savings per booked load.
-- **Missed calls when volume spikes.** Calls that go to voicemail at peak are
-  loads you don't cover. The agent answers instantly, around the clock, and
-  handles many calls at the same time — so nothing sits in a queue.
-- **No audit trail.** Right now there's no clean record of who called, what was
-  offered, or why a load did or didn't book. Every call is now a structured,
-  searchable record feeding a dashboard your team opens in the browser.
-
 **Quality & safety.** I stress-tested it the way a bad actor would — trying to
 skip verification, fish out your rate ceiling, brute-force the passcode, and force
 a transfer after a failed negotiation. It held the line on every one. Two smaller
 process gaps it surfaced are fixed and re-checked.
 
-**One step to go fully live.** Texting the passcode needs a phone sender enabled
-on your workspace (a quick admin step). The passcode logic is already built; for
-this demo the code is confirmed through the call record. Everything else is live.
-
 **Links**
-- Demo video (~5 min): [link]
-- Code repository: [link]
-- HappyRobot workflow: [link]
-- Operations dashboard (HappyRobot App): https://platform.happyrobot.ai/fderobertoarce/apps/carrier-call-app-35v50
-
-**Suggested next steps**
-1. Enable the SMS sender (the one remaining setup item).
-2. Pilot the agent on a slice of inbound traffic and review the dashboard weekly.
-3. Tune load-matching and negotiation thresholds from real pilot data.
+- Here is the Operations dashboard take a look! (HappyRobot App): https://platform.happyrobot.ai/fderobertoarce/apps/carrier-call-app-35v50
 
 Happy to walk through it live whenever works for you.
 
