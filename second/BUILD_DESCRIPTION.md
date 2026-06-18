@@ -99,7 +99,12 @@ exposed to the agent; the full number and code go solely to the SMS node.
 
 **Negotiation policy.** Server-side, capped at 3 counter rounds; the agent must
 obtain a specific dollar figure from the carrier before evaluating, never
-volunteers increases, and closes professionally with no transfer if no deal.
+volunteers increases, and closes professionally with no transfer if no deal. The
+policy **anchors at the posted rate and counters *below* the carrier's ask** —
+it does not simply accept any ask that falls under the hidden ceiling, which
+would leak margin whenever a carrier opens just beneath it. It concedes upward
+toward whichever is lower (the ask or the ceiling) across the rounds, takes the
+deal on the final round if it is within the ceiling, and otherwise walks away.
 
 **One verification attempt per call.** After a confirmed MC fails FMCSA, the call
 ends — preventing MC "fishing" (trying numbers until one is valid). This was
