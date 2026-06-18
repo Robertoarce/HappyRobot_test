@@ -1,0 +1,20 @@
+{
+  "name": "carrier-sales-platform",
+  "version": "1.0.0",
+  "description": "HappyRobot platform-side build (workflow, voice agent, KPIs, QA) via the TypeScript SDK",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "auth:check": "tsx src/auth-check.ts",
+    "build:workflow": "tsx src/build-workflow.ts",
+    "qa:run": "tsx src/run-qa.ts"
+  },
+  "dependencies": {
+    "@happyrobot-ai/sdk": "^0.1.21",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
