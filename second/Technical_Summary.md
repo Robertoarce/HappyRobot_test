@@ -182,7 +182,7 @@ handling. Every run is automatically audited against these.
 
 ## 8. Evaluation & QA
 
-**Unit tests (middleware):** 26 tests run against a local fake TMS that reproduces
+**Unit tests (middleware):** 29 tests run against a local fake TMS that reproduces
 every documented fault mode (timeout, partial, malformed, delayed close) — proving
 the adapter retries transport faults and never retries semantic errors — plus
 FMCSA-parsing and OTP tests (registered-phone extraction, code binding, masking).
@@ -199,6 +199,18 @@ FMCSA-parsing and OTP tests (registered-phone extraction, code binding, masking)
 Two genuine weaknesses surfaced by adversarial testing, both fixed and verified —
 the security-critical behavior (never bypass OTP, never reveal the ceiling) held
 throughout.
+
+**Issues found in live testing (and fixed):**
+
+| Issue | Symptom | Fix |
+| --- | --- | --- |
+| Margin leakage in negotiation | Agent accepted any ask below the hidden ceiling instantly (a $6,000 ask on a $5,022 load booked at $6,000 — $0 saved) | Rewrote the policy to anchor at the posted rate and counter *below* the ask, conceding toward (never past) the ceiling — savings now captured every call |
+| Booking "false failure" | After a successful booking, the agent read the post-booking margin output and told the carrier the load "was taken" | Agent now judges success **only** from `book_load`'s `booking_reference`; analytics output never enters its context |
+| Session-ID leak | Agent asked the caller "what's your session ID?" | `session_id` removed as an agent parameter; bound automatically to the run ID server-side |
+
+The security-critical guarantees (OTP never bypassed, ceiling never revealed) held
+through all of these — the issues were process/UX and margin-optimization gaps,
+caught by live red-teaming and fixed.
 
 **Adversarial tests (manual web calls):** rate-ceiling extraction, book a
 non-existent load, and the 3-round negotiation stalemate / forced transfer —
